@@ -1,0 +1,35 @@
+---
+
+- name: Install and Run Nginx
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+
+- name: Install and Run Cowsay
+  hosts: all
+  become: true
+
+  tasks: 
+    - name: Install Cowsay package
+      apt:
+        name: cowsay
+        state: present
+
+    - name: Check if cowsay executable exists
+      stat:
+        path: /usr/games/cowsay
+      register: cowsay_executable
+
+    - name: Run cowsay command
+      command: /usr/games/cowsay "Welcome to DevOps Dude!"
+      when: cowsay_executable.stat.exists
